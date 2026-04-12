@@ -1,0 +1,30 @@
+﻿{
+  "name": "mortgage-frontend",
+  "version": "1.0.0",
+  "description": "房贷计算器前端",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.3",
+    "vuex": "^3.6.2",
+    "element-ui": "^2.15.14",
+    "echarts": "^5.4.3",
+    "axios": "^0.27.2",
+    "file-saver": "^2.0.5"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "^5.0.8",
+    "vue-template-compiler": "^2.6.14",
+    "sass": "^1.32.7",
+    "sass-loader": "^12.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

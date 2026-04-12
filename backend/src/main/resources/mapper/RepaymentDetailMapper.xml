@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mortgage.mapper.RepaymentDetailMapper">
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO repayment_detail (
+            plan_id, period, payment_date, monthly_payment, principal, interest,
+            remaining_principal, cumulative_payment, cumulative_principal, cumulative_interest,
+            is_prepaid, created_at
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.planId}, #{item.period}, #{item.paymentDate}, #{item.monthlyPayment},
+                #{item.principal}, #{item.interest}, #{item.remainingPrincipal},
+                #{item.cumulativePayment}, #{item.cumulativePrincipal}, #{item.cumulativeInterest},
+                #{item.isPrepaid}, #{item.createdAt}
+            )
+        </foreach>
+    </insert>
+</mapper>
