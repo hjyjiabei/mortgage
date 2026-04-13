@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function simulate(data) {
+export function simulatePrepay(data) {
   return request({
-    url: '/prepay',
+    url: '/prepay/simulate',
     method: 'post',
     data
   })

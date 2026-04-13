@@ -3,7 +3,7 @@ package com.mortgage.service;
 import com.mortgage.common.Constants;
 import com.mortgage.exception.BusinessException;
 import com.mortgage.model.dto.CalculateRequest;
-import com.mortgage.model.dto.PrepayRequest;
+import com.mortgage.model.dto.PrepaySimulateRequest;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
@@ -42,12 +42,12 @@ public class ValidatorService {
         }
     }
 
-    public void validatePrepayRequest(PrepayRequest request) {
-        if (request.getPlanId() == null) {
-            throw new BusinessException("计划ID不能为空");
+    public void validatePrepaySimulateRequest(PrepaySimulateRequest request) {
+        if (request.getRemainingPrincipal() == null) {
+            throw new BusinessException("未还本金不能为空");
         }
-        if (request.getPrepayPeriod() == null || request.getPrepayPeriod() < 1) {
-            throw new BusinessException("提前还款期数不能为空或小于1");
+        if (request.getRemainingPrincipal().compareTo(BigDecimal.valueOf(1000)) < 0) {
+            throw new BusinessException("未还本金不能低于1000元");
         }
         if (request.getPrepayAmount() == null) {
             throw new BusinessException("提前还款金额不能为空");
@@ -55,8 +55,11 @@ public class ValidatorService {
         if (request.getPrepayAmount().compareTo(BigDecimal.valueOf(1000)) < 0) {
             throw new BusinessException("提前还款金额不能低于1000元");
         }
-        if (request.getPrepayType() == null) {
-            throw new BusinessException("提前还款类型不能为空");
+        if (request.getPrepayAmount().compareTo(request.getRemainingPrincipal()) >= 0) {
+            throw new BusinessException("提前还款金额不能超过或等于剩余本金");
+        }
+        if (request.getRemainingTerm() == null || request.getRemainingTerm() < 1) {
+            throw new BusinessException("剩余期数不能为空或小于1");
         }
     }
 }

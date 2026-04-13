@@ -1,10 +1,9 @@
 package com.mortgage.controller;
 
 import com.mortgage.common.Result;
-import com.mortgage.model.dto.PrepayRequest;
-import com.mortgage.model.dto.PrepayResponse;
+import com.mortgage.model.dto.PrepayCompareResponse;
+import com.mortgage.model.dto.PrepaySimulateRequest;
 import com.mortgage.service.PrepayService;
-import com.mortgage.service.ValidatorService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,17 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class PrepayController {
     private final PrepayService prepayService;
-    private final ValidatorService validatorService;
 
-    public PrepayController(PrepayService prepayService, ValidatorService validatorService) {
+    public PrepayController(PrepayService prepayService) {
         this.prepayService = prepayService;
-        this.validatorService = validatorService;
     }
 
-    @PostMapping
-    public Result<PrepayResponse> simulate(@Valid @RequestBody PrepayRequest request) {
-        validatorService.validatePrepayRequest(request);
-        PrepayResponse response = prepayService.simulatePrepay(request);
+    @PostMapping("/simulate")
+    public Result<PrepayCompareResponse> simulate(@Valid @RequestBody PrepaySimulateRequest request) {
+        PrepayCompareResponse response = prepayService.simulatePrepay(request);
         return Result.success(response);
     }
 }
