@@ -15,9 +15,14 @@
                 <template slot="append">月</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="年利率" prop="annualRate">
+<el-form-item label="年利率" prop="annualRate">
               <el-input v-model="form.annualRate" type="number" placeholder="请输入年利率">
                 <template slot="append">%</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="利率浮动" prop="rateFloatBp">
+              <el-input v-model="form.rateFloatBp" type="number" placeholder="正数上浮，负数下浮">
+                <template slot="append">bp</template>
               </el-input>
             </el-form-item>
             <el-form-item label="放款日期" prop="startDate">
@@ -74,10 +79,11 @@ export default {
   name: 'Compare',
   data() {
     return {
-      form: {
+form: {
         loanAmount: DEFAULT_LOAN_AMOUNT,
         loanTerm: DEFAULT_LOAN_TERM,
         annualRate: 4.3,
+        rateFloatBp: 0,
         startDate: new Date().toISOString().slice(0, 10)
       },
       rules: {
@@ -92,14 +98,15 @@ export default {
   },
   methods: {
     formatAmount,
-    handleCompare() {
+handleCompare() {
       this.$refs.form.validate(async valid => {
         if (!valid) return
         this.loading = true
         try {
           const data = {
             ...this.form,
-            annualRate: Number(this.form.annualRate) / 100
+            annualRate: Number(this.form.annualRate) / 100,
+            rateFloatBp: Number(this.form.rateFloatBp) || 0
           }
           const res = await compare(data)
           this.result = res.data

@@ -25,6 +25,10 @@ public class CalculateRequest {
     @DecimalMax(value = "1", message = "年利率不能超过1")
     private BigDecimal annualRate;
 
+    @Min(value = -500, message = "利率浮动幅度不能低于-500bp")
+    @Max(value = 500, message = "利率浮动幅度不能超过500bp")
+    private Integer rateFloatBp;
+
     @NotNull(message = "还款方式不能为空")
     @Pattern(regexp = "EQUAL_PRINCIPAL_INTEREST|EQUAL_PRINCIPAL", message = "还款方式必须为等额本息或等额本金")
     private String repaymentMethod;
@@ -58,6 +62,14 @@ public class CalculateRequest {
 
     public void setAnnualRate(BigDecimal annualRate) {
         this.annualRate = annualRate;
+    }
+
+    public Integer getRateFloatBp() {
+        return rateFloatBp;
+    }
+
+    public void setRateFloatBp(Integer rateFloatBp) {
+        this.rateFloatBp = rateFloatBp;
     }
 
     public String getRepaymentMethod() {

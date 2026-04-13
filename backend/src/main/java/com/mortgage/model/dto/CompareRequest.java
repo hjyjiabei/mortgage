@@ -21,6 +21,10 @@ public class CompareRequest {
     @DecimalMin(value = "0.001", message = "年利率不能低于0.001")
     private BigDecimal annualRate;
 
+    @Min(value = -500, message = "利率浮动幅度不能低于-500bp")
+    @Max(value = 500, message = "利率浮动幅度不能超过500bp")
+    private Integer rateFloatBp;
+
     @NotNull(message = "放款日期不能为空")
     private LocalDate startDate;
 
@@ -48,6 +52,14 @@ public class CompareRequest {
 
     public void setAnnualRate(BigDecimal annualRate) {
         this.annualRate = annualRate;
+    }
+
+    public Integer getRateFloatBp() {
+        return rateFloatBp;
+    }
+
+    public void setRateFloatBp(Integer rateFloatBp) {
+        this.rateFloatBp = rateFloatBp;
     }
 
     public LocalDate getStartDate() {

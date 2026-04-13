@@ -9,6 +9,8 @@ public class CalculateResponse {
     private BigDecimal loanAmount;
     private Integer loanTerm;
     private BigDecimal annualRate;
+    private Integer rateFloatBp;
+    private BigDecimal actualAnnualRate;
     private BigDecimal monthlyRate;
     private String repaymentMethod;
     private String repaymentMethodName;
@@ -53,6 +55,22 @@ public class CalculateResponse {
 
     public void setAnnualRate(BigDecimal annualRate) {
         this.annualRate = annualRate;
+    }
+
+    public Integer getRateFloatBp() {
+        return rateFloatBp;
+    }
+
+    public void setRateFloatBp(Integer rateFloatBp) {
+        this.rateFloatBp = rateFloatBp;
+    }
+
+    public BigDecimal getActualAnnualRate() {
+        return actualAnnualRate;
+    }
+
+    public void setActualAnnualRate(BigDecimal actualAnnualRate) {
+        this.actualAnnualRate = actualAnnualRate;
     }
 
     public BigDecimal getMonthlyRate() {

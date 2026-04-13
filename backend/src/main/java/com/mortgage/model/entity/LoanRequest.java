@@ -14,6 +14,7 @@ public class LoanRequest {
     private BigDecimal loanAmount;
     private Integer loanTerm;
     private BigDecimal annualRate;
+    private Integer rateFloatBp;
     private String repaymentMethod;
     private LocalDate startDate;
     private String loanType;
@@ -52,6 +53,14 @@ public class LoanRequest {
 
     public void setAnnualRate(BigDecimal annualRate) {
         this.annualRate = annualRate;
+    }
+
+    public Integer getRateFloatBp() {
+        return rateFloatBp;
+    }
+
+    public void setRateFloatBp(Integer rateFloatBp) {
+        this.rateFloatBp = rateFloatBp;
     }
 
     public String getRepaymentMethod() {

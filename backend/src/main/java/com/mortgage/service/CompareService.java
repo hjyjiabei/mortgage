@@ -28,23 +28,27 @@ public class CompareService {
         this.repaymentPlanMapper = repaymentPlanMapper;
     }
 
-    public CompareResponse compare(CompareRequest request) {
+public CompareResponse compare(CompareRequest request) {
+        BigDecimal actualAnnualRate = CalculatorUtil.calculateActualAnnualRate(
+            request.getAnnualRate(), 
+            request.getRateFloatBp()
+        );
         List<DetailDTO> detailsA = CalculatorUtil.calculate(
             request.getLoanAmount(),
-            request.getAnnualRate(),
+            actualAnnualRate,
             request.getLoanTerm(),
             request.getStartDate(),
             RepaymentMethod.EQUAL_PRINCIPAL_INTEREST
         );
         List<DetailDTO> detailsB = CalculatorUtil.calculate(
             request.getLoanAmount(),
-            request.getAnnualRate(),
+            actualAnnualRate,
             request.getLoanTerm(),
             request.getStartDate(),
             RepaymentMethod.EQUAL_PRINCIPAL
         );
-        PlanDTO planA = buildPlanDTO(detailsA, request, RepaymentMethod.EQUAL_PRINCIPAL_INTEREST);
-        PlanDTO planB = buildPlanDTO(detailsB, request, RepaymentMethod.EQUAL_PRINCIPAL);
+        PlanDTO planA = buildPlanDTO(detailsA, request, RepaymentMethod.EQUAL_PRINCIPAL_INTEREST, actualAnnualRate);
+        PlanDTO planB = buildPlanDTO(detailsB, request, RepaymentMethod.EQUAL_PRINCIPAL, actualAnnualRate);
         CompareResponse response = new CompareResponse();
         response.setPlanA(planA);
         response.setPlanB(planB);
@@ -57,12 +61,14 @@ public class CompareService {
         return response;
     }
 
-    private PlanDTO buildPlanDTO(List<DetailDTO> details, CompareRequest request, RepaymentMethod method) {
+    private PlanDTO buildPlanDTO(List<DetailDTO> details, CompareRequest request, RepaymentMethod method, BigDecimal actualAnnualRate) {
         PlanDTO plan = new PlanDTO();
         plan.setLoanAmount(request.getLoanAmount());
         plan.setLoanTerm(request.getLoanTerm());
         plan.setActualTerm(request.getLoanTerm());
         plan.setAnnualRate(request.getAnnualRate());
+        plan.setRateFloatBp(request.getRateFloatBp() != null ? request.getRateFloatBp() : 0);
+        plan.setActualAnnualRate(actualAnnualRate);
         plan.setRepaymentMethod(method.name());
         plan.setRepaymentMethodName(method.getName());
         plan.setFirstPayment(details.get(0).getMonthlyPayment());

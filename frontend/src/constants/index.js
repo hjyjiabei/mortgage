@@ -23,5 +23,6 @@ export const PLAN_STATUS = {
 export const DEFAULT_LOAN_AMOUNT = 1000000
 export const DEFAULT_LOAN_TERM = 240
 export const DEFAULT_ANNUAL_RATE = 0.043
+export const DEFAULT_RATE_FLOAT_BP = 0
 export const MAX_LOAN_YEARS = 30
 export const MIN_LOAN_YEARS = 1

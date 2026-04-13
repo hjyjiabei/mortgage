@@ -10,6 +10,8 @@ public class PlanDTO {
     private Integer loanTerm;
     private Integer actualTerm;
     private BigDecimal annualRate;
+    private Integer rateFloatBp;
+    private BigDecimal actualAnnualRate;
     private String repaymentMethod;
     private String repaymentMethodName;
     private BigDecimal monthlyPayment;
@@ -69,6 +71,22 @@ public class PlanDTO {
 
     public void setAnnualRate(BigDecimal annualRate) {
         this.annualRate = annualRate;
+    }
+
+    public Integer getRateFloatBp() {
+        return rateFloatBp;
+    }
+
+    public void setRateFloatBp(Integer rateFloatBp) {
+        this.rateFloatBp = rateFloatBp;
+    }
+
+    public BigDecimal getActualAnnualRate() {
+        return actualAnnualRate;
+    }
+
+    public void setActualAnnualRate(BigDecimal actualAnnualRate) {
+        this.actualAnnualRate = actualAnnualRate;
     }
 
     public String getRepaymentMethod() {

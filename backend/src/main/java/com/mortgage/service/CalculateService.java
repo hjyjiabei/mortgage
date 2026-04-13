@@ -35,39 +35,48 @@ public class CalculateService {
         this.repaymentDetailMapper = repaymentDetailMapper;
     }
 
-    public CalculateResponse calculate(CalculateRequest request) {
+public CalculateResponse calculate(CalculateRequest request) {
         RepaymentMethod method = RepaymentMethod.valueOf(request.getRepaymentMethod());
+        BigDecimal actualAnnualRate = CalculatorUtil.calculateActualAnnualRate(
+            request.getAnnualRate(), 
+            request.getRateFloatBp()
+        );
         List<DetailDTO> details = CalculatorUtil.calculate(
             request.getLoanAmount(),
-            request.getAnnualRate(),
+            actualAnnualRate,
             request.getLoanTerm(),
             request.getStartDate(),
             method
         );
-        return buildResponse(request, details, method);
+        return buildResponse(request, details, method, actualAnnualRate);
     }
 
     @Transactional
     public CalculateResponse calculateAndSave(CalculateRequest request) {
         RepaymentMethod method = RepaymentMethod.valueOf(request.getRepaymentMethod());
+        BigDecimal actualAnnualRate = CalculatorUtil.calculateActualAnnualRate(
+            request.getAnnualRate(), 
+            request.getRateFloatBp()
+        );
         List<DetailDTO> details = CalculatorUtil.calculate(
             request.getLoanAmount(),
-            request.getAnnualRate(),
+            actualAnnualRate,
             request.getLoanTerm(),
             request.getStartDate(),
             method
         );
         LoanRequest loanRequest = saveLoanRequest(request);
-        RepaymentPlan plan = saveRepaymentPlan(loanRequest, details, method);
+        RepaymentPlan plan = saveRepaymentPlan(loanRequest, details, method, actualAnnualRate);
         saveRepaymentDetails(plan.getId(), details);
-        return buildResponse(request, details, method, plan);
+        return buildResponse(request, details, method, actualAnnualRate, plan);
     }
 
-    private LoanRequest saveLoanRequest(CalculateRequest request) {
+private LoanRequest saveLoanRequest(CalculateRequest request) {
         LoanRequest loanRequest = new LoanRequest();
         loanRequest.setLoanAmount(request.getLoanAmount());
         loanRequest.setLoanTerm(request.getLoanTerm());
         loanRequest.setAnnualRate(request.getAnnualRate());
+        loanRequest.setRateFloatBp(request.getRateFloatBp() != null ? request.getRateFloatBp() : 0);
         loanRequest.setRepaymentMethod(request.getRepaymentMethod());
         loanRequest.setStartDate(request.getStartDate());
         loanRequest.setLoanType(request.getLoanType() != null ? request.getLoanType() : "COMMERCIAL");
@@ -79,7 +88,7 @@ public class CalculateService {
         return loanRequest;
     }
 
-    private RepaymentPlan saveRepaymentPlan(LoanRequest loanRequest, List<DetailDTO> details, RepaymentMethod method) {
+    private RepaymentPlan saveRepaymentPlan(LoanRequest loanRequest, List<DetailDTO> details, RepaymentMethod method, BigDecimal actualAnnualRate) {
         RepaymentPlan plan = new RepaymentPlan();
         plan.setPlanNo(PlanNoGenerator.generate());
         plan.setLoanRequestId(loanRequest.getId());
@@ -87,7 +96,8 @@ public class CalculateService {
         plan.setLoanTerm(loanRequest.getLoanTerm());
         plan.setActualTerm(loanRequest.getLoanTerm());
         plan.setAnnualRate(loanRequest.getAnnualRate());
-        plan.setMonthlyRate(CalculatorUtil.calculateMonthlyRate(loanRequest.getAnnualRate()));
+        plan.setRateFloatBp(loanRequest.getRateFloatBp());
+        plan.setMonthlyRate(CalculatorUtil.calculateMonthlyRate(actualAnnualRate));
         plan.setRepaymentMethod(method.name());
         plan.setFirstPayment(details.get(0).getMonthlyPayment());
         plan.setLastPayment(details.get(details.size() - 1).getMonthlyPayment());
@@ -128,12 +138,14 @@ public class CalculateService {
         repaymentDetailMapper.batchInsert(entities);
     }
 
-    private CalculateResponse buildResponse(CalculateRequest request, List<DetailDTO> details, RepaymentMethod method) {
+private CalculateResponse buildResponse(CalculateRequest request, List<DetailDTO> details, RepaymentMethod method, BigDecimal actualAnnualRate) {
         CalculateResponse response = new CalculateResponse();
         response.setLoanAmount(request.getLoanAmount());
         response.setLoanTerm(request.getLoanTerm());
         response.setAnnualRate(request.getAnnualRate());
-        response.setMonthlyRate(CalculatorUtil.calculateMonthlyRate(request.getAnnualRate()));
+        response.setRateFloatBp(request.getRateFloatBp() != null ? request.getRateFloatBp() : 0);
+        response.setActualAnnualRate(actualAnnualRate);
+        response.setMonthlyRate(CalculatorUtil.calculateMonthlyRate(actualAnnualRate));
         response.setRepaymentMethod(method.name());
         response.setRepaymentMethodName(method.getName());
         response.setFirstPayment(details.get(0).getMonthlyPayment());
@@ -151,8 +163,8 @@ public class CalculateService {
         return response;
     }
 
-    private CalculateResponse buildResponse(CalculateRequest request, List<DetailDTO> details, RepaymentMethod method, RepaymentPlan plan) {
-        CalculateResponse response = buildResponse(request, details, method);
+    private CalculateResponse buildResponse(CalculateRequest request, List<DetailDTO> details, RepaymentMethod method, BigDecimal actualAnnualRate, RepaymentPlan plan) {
+        CalculateResponse response = buildResponse(request, details, method, actualAnnualRate);
         response.setPlanNo(plan.getPlanNo());
         return response;
     }

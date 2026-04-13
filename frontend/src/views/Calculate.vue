@@ -15,9 +15,14 @@
                 <template slot="append">月</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="年利率" prop="annualRate">
+<el-form-item label="年利率" prop="annualRate">
               <el-input v-model="form.annualRate" type="number" placeholder="请输入年利率">
                 <template slot="append">%</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="利率浮动" prop="rateFloatBp">
+              <el-input v-model="form.rateFloatBp" type="number" placeholder="正数上浮，负数下浮">
+                <template slot="append">bp</template>
               </el-input>
             </el-form-item>
             <el-form-item label="还款方式" prop="repaymentMethod">
@@ -43,8 +48,10 @@
             <el-col :span="12">
               <div class="summary-item"><span class="label">贷款金额</span><span class="value">{{ formatAmount(result.loanAmount) }}元</span></div>
               <div class="summary-item"><span class="label">贷款期限</span><span class="value">{{ result.loanTerm }}月</span></div>
-              <div class="summary-item"><span class="label">年利率</span><span class="value">{{ formatRate(result.annualRate) }}</span></div>
-              <div class="summary-item"><span class="label">月利率</span><span class="value">{{ formatRate(result.monthlyRate) }}</span></div>
+<div class="summary-item"><span class="label">年利率</span><span class="value">{{ formatRate(result.annualRate) }}</span></div>
+               <div class="summary-item"><span class="label">利率浮动</span><span class="value">{{ result.rateFloatBp }}bp</span></div>
+               <div class="summary-item"><span class="label">实际年利率</span><span class="value">{{ formatRate(result.actualAnnualRate) }}</span></div>
+               <div class="summary-item"><span class="label">月利率</span><span class="value">{{ formatRate(result.monthlyRate) }}</span></div>
               <div class="summary-item"><span class="label">还款方式</span><span class="value">{{ result.repaymentMethodName }}</span></div>
               <div class="summary-item" v-if="result.monthlyPayment"><span class="label">月供</span><span class="value">{{ formatAmount(result.monthlyPayment) }}元</span></div>
               <div class="summary-item"><span class="label">首月还款</span><span class="value">{{ formatAmount(result.firstPayment) }}元</span></div>
@@ -96,10 +103,11 @@ export default {
   name: 'Calculate',
   data() {
     return {
-      form: {
+form: {
         loanAmount: DEFAULT_LOAN_AMOUNT,
         loanTerm: DEFAULT_LOAN_TERM,
         annualRate: 4.3,
+        rateFloatBp: 0,
         repaymentMethod: 'EQUAL_PRINCIPAL_INTEREST',
         startDate: new Date().toISOString().slice(0, 10)
       },
@@ -118,14 +126,15 @@ export default {
   methods: {
     formatAmount,
     formatRate,
-    handleCalculate() {
+handleCalculate() {
       this.$refs.form.validate(async valid => {
         if (!valid) return
         this.loading = true
         try {
           const data = {
             ...this.form,
-            annualRate: Number(this.form.annualRate) / 100
+            annualRate: Number(this.form.annualRate) / 100,
+            rateFloatBp: Number(this.form.rateFloatBp) || 0
           }
           const res = await calculate(data)
           this.result = res.data

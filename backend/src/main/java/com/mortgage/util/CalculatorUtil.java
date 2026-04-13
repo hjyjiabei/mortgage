@@ -15,6 +15,18 @@ public final class CalculatorUtil {
 
     private CalculatorUtil() {}
 
+    public static BigDecimal calculateActualAnnualRate(BigDecimal baseAnnualRate, Integer rateFloatBp) {
+        if (baseAnnualRate == null) {
+            return BigDecimal.ZERO;
+        }
+        if (rateFloatBp == null || rateFloatBp == 0) {
+            return baseAnnualRate;
+        }
+        BigDecimal bpAdjustment = BigDecimal.valueOf(rateFloatBp)
+            .divide(BigDecimal.valueOf(10000), RATE_SCALE, ROUNDING_MODE);
+        return baseAnnualRate.add(bpAdjustment).setScale(RATE_SCALE, ROUNDING_MODE);
+    }
+
     public static BigDecimal calculateMonthlyRate(BigDecimal annualRate) {
         return annualRate.divide(BigDecimal.valueOf(12), RATE_SCALE, ROUNDING_MODE);
     }
@@ -143,8 +155,8 @@ public final class CalculatorUtil {
         return total.setScale(SCALE, ROUNDING_MODE);
     }
 
-    public static BigDecimal calculateInterestRatio(BigDecimal totalInterest, BigDecimal totalPayment) {
-        if (totalPayment == null || totalPayment.compareTo(BigDecimal.ZERO) == 0) {
+public static BigDecimal calculateInterestRatio(BigDecimal totalInterest, BigDecimal totalPayment) {
+        if (totalInterest == null || totalPayment == null || totalPayment.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }
         return totalInterest.divide(totalPayment, 4, ROUNDING_MODE).multiply(BigDecimal.valueOf(100));
