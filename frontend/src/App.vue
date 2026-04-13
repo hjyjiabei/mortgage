@@ -1,10 +1,10 @@
-﻿<template>
+<template>
   <div id="app">
     <el-container>
       <el-header>
         <div class="header-content">
           <h1>房贷计算器</h1>
-          <el-menu mode="horizontal" router :default-active=".path">
+          <el-menu mode="horizontal" router :default-active="$route.path">
             <el-menu-item index="/">贷款计算</el-menu-item>
             <el-menu-item index="/compare">方案对比</el-menu-item>
             <el-menu-item index="/prepay">提前还款</el-menu-item>

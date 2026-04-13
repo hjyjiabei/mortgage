@@ -1,3 +1,3 @@
-﻿export function exportPdf(planId) {
-  return /api/plan//export
+export function exportPdf(planId) {
+  return `/api/plan/${planId}/export`
 }

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="calculate-page">
     <el-row :gutter="20">
       <el-col :span="8">
@@ -119,7 +119,7 @@ export default {
     formatAmount,
     formatRate,
     handleCalculate() {
-      this..form.validate(async valid => {
+      this.$refs.form.validate(async valid => {
         if (!valid) return
         this.loading = true
         try {
@@ -138,7 +138,7 @@ export default {
       })
     },
     handleReset() {
-      this..form.resetFields()
+      this.$refs.form.resetFields()
       this.result = null
       this.details = []
     }

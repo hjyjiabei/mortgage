@@ -1,4 +1,4 @@
-﻿export function validateLoanAmount(value) {
+export function validateLoanAmount(value) {
   if (!value) return '请输入贷款金额'
   const num = Number(value)
   if (num < 10000) return '贷款金额不能低于10000元'

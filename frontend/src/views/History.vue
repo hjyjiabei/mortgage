@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="history-page">
     <div class="card-container">
       <div class="section-title">历史记录</div>

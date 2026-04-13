@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="compare-page">
     <el-row :gutter="20">
       <el-col :span="8">
@@ -93,7 +93,7 @@ export default {
   methods: {
     formatAmount,
     handleCompare() {
-      this..form.validate(async valid => {
+      this.$refs.form.validate(async valid => {
         if (!valid) return
         this.loading = true
         try {

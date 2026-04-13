@@ -1,4 +1,4 @@
-﻿export const REPAYMENT_METHODS = [
+export const REPAYMENT_METHODS = [
   { value: 'EQUAL_PRINCIPAL_INTEREST', label: '等额本息' },
   { value: 'EQUAL_PRINCIPAL', label: '等额本金' }
 ]

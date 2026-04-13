@@ -1,4 +1,4 @@
-﻿export function formatAmount(value) {
+export function formatAmount(value) {
   if (!value) return '0.00'
   const num = Number(value)
   return num.toFixed(2)
@@ -23,5 +23,5 @@ export function formatDate(date) {
   const year = d.getFullYear()
   const month = String(d.getMonth() + 1).padStart(2, '0')
   const day = String(d.getDate()).padStart(2, '0')
-  return ${year}--
+  return `${year}-${month}-${day}`
 }

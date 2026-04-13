@@ -1,4 +1,4 @@
-﻿const state = {
+const state = {
   currentPlan: null,
   details: [],
   compareResult: null,
